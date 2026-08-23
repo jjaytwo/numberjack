@@ -454,8 +454,11 @@ body {
 .cat-svg { width: 100%; height: 100%; }
 /* Base point sits at the tail's attachment point on the body (in the SVG's own
    140x160 user-unit space), so both the cover and table cats wag around the same
-   spot regardless of how large each is rendered on screen. */
-.cat-tail-wrap { transform-origin: 96px 145px; animation: tail-wag 1.8s ease-in-out infinite; }
+   spot regardless of how large each is rendered on screen. Kept short and low
+   (tip stays around y=108, well below the eyes at y~70) and drawn first in the
+   SVG so the head/body/face always render on top of it — it can never swing up
+   and cover the face. */
+.cat-tail-wrap { transform-origin: 100px 147px; animation: tail-wag 1.8s ease-in-out infinite; }
 @keyframes tail-wag {
   0%, 100% { transform: rotate(-12deg); }
   50% { transform: rotate(12deg); }
@@ -802,18 +805,25 @@ body {
         <div class="paw-toe t3"></div>
       </div>
       <svg class="cover-cat-svg" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 30 35 L 25 5 L 50 25 Z" fill="#3a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M 30 30 L 30 8 L 48 25 Z" fill="#7a4a3a" stroke="#1a0a08" stroke-width="1.5"/>
-        <path d="M 110 35 L 115 5 L 90 25 Z" fill="#3a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M 110 30 L 110 8 L 92 25 Z" fill="#7a4a3a" stroke="#1a0a08" stroke-width="1.5"/>
-        <ellipse cx="70" cy="75" rx="42" ry="40" fill="#2a1810" stroke="#1a0a08" stroke-width="3"/>
+        <defs>
+          <clipPath id="coverHeadClip"><ellipse cx="70" cy="75" rx="42" ry="40"/></clipPath>
+        </defs>
         <g class="cat-tail-wrap">
-          <path d="M 96 145 Q 124 150 126 120 Q 128 92 106 84" fill="none" stroke="#1a0a08" stroke-width="17" stroke-linecap="round"/>
-          <path d="M 96 145 Q 124 150 126 120 Q 128 92 106 84" fill="none" stroke="#2a1810" stroke-width="13" stroke-linecap="round"/>
+          <path d="M 100 147 Q 120 150 122 130 Q 124 112 112 108" fill="none" stroke="#1a0a08" stroke-width="17" stroke-linecap="round"/>
+          <path d="M 100 147 Q 120 150 122 130 Q 124 112 112 108" fill="none" stroke="#c97830" stroke-width="13" stroke-linecap="round"/>
+        </g>
+        <path d="M 30 35 L 25 5 L 50 25 Z" fill="#2a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M 30 30 L 30 8 L 48 25 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="1.5"/>
+        <path d="M 110 35 L 115 5 L 90 25 Z" fill="#c97830" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M 110 30 L 110 8 L 92 25 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="1.5"/>
+        <ellipse cx="70" cy="75" rx="42" ry="40" fill="#f7ecdc" stroke="#1a0a08" stroke-width="3"/>
+        <g clip-path="url(#coverHeadClip)">
+          <path d="M 30 45 Q 45 25 65 32 Q 58 50 50 68 Q 35 70 30 45 Z" fill="#2a2018"/>
+          <path d="M 90 35 Q 108 40 108 62 Q 100 75 85 62 Q 82 45 90 35 Z" fill="#c97830"/>
         </g>
         <path d="M 55 98 Q 28 100 28 123 Q 28 146 40 150 L 100 150 Q 112 146 112 123 Q 112 100 85 98 Z" fill="#221a16" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="M 50 115 L 35 105 L 35 125 L 50 120 Z" fill="#8b2929" stroke="#1a0a08" stroke-width="2"/>
-        <path d="M 90 115 L 105 105 L 105 125 L 90 120 Z" fill="#8b2929" stroke="#1a0a08" stroke-width="2"/>
+        <path d="M 50 115 L 35 105 L 35 125 L 50 120 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
+        <path d="M 90 115 L 105 105 L 105 125 L 90 120 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
         <path d="M 62 98 L 70 109 L 78 98 Z" fill="#fafaf5" stroke="#1a0a08" stroke-width="1.5" stroke-linejoin="round"/>
         <path d="M 60 99 L 52 122" fill="none" stroke="#a83838" stroke-width="5" stroke-linecap="round"/>
         <path d="M 80 99 L 88 122" fill="none" stroke="#a83838" stroke-width="5" stroke-linecap="round"/>
@@ -844,7 +854,7 @@ body {
         <line x1="100" y1="88" x2="120" y2="90" stroke="#fafaf5" stroke-width="1" opacity="0.7"/>
         <ellipse class="cat-cheek" cx="38" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.6"/>
         <ellipse class="cat-cheek" cx="102" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.6"/>
-        <ellipse cx="20" cy="140" rx="12" ry="8" fill="#2a1810" stroke="#1a0a08" stroke-width="2"/>
+        <ellipse cx="20" cy="140" rx="12" ry="8" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
         <rect x="30" y="148" width="80" height="10" rx="3" fill="#4a3020" stroke="#1a0a08" stroke-width="2"/>
         <rect x="35" y="150" width="70" height="2" fill="#d4a017" opacity="0.6"/>
       </svg>
@@ -918,18 +928,25 @@ body {
     <div class="dealer-zone">
       <div class="cat-wrap" id="catWrap">
         <svg class="cat-svg" viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 30 35 L 25 5 L 50 25 Z" fill="#3a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M 30 30 L 30 8 L 48 25 Z" fill="#7a4a3a" stroke="#1a0a08" stroke-width="1.5"/>
-          <path d="M 110 35 L 115 5 L 90 25 Z" fill="#3a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M 110 30 L 110 8 L 92 25 Z" fill="#7a4a3a" stroke="#1a0a08" stroke-width="1.5"/>
-          <ellipse cx="70" cy="75" rx="42" ry="40" fill="#2a1810" stroke="#1a0a08" stroke-width="3"/>
+          <defs>
+            <clipPath id="tableHeadClip"><ellipse cx="70" cy="75" rx="42" ry="40"/></clipPath>
+          </defs>
           <g class="cat-tail-wrap">
-            <path d="M 96 145 Q 124 150 126 120 Q 128 92 106 84" fill="none" stroke="#1a0a08" stroke-width="17" stroke-linecap="round"/>
-            <path d="M 96 145 Q 124 150 126 120 Q 128 92 106 84" fill="none" stroke="#2a1810" stroke-width="13" stroke-linecap="round"/>
+            <path d="M 100 147 Q 120 150 122 130 Q 124 112 112 108" fill="none" stroke="#1a0a08" stroke-width="17" stroke-linecap="round"/>
+            <path d="M 100 147 Q 120 150 122 130 Q 124 112 112 108" fill="none" stroke="#c97830" stroke-width="13" stroke-linecap="round"/>
+          </g>
+          <path d="M 30 35 L 25 5 L 50 25 Z" fill="#2a2018" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M 30 30 L 30 8 L 48 25 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="1.5"/>
+          <path d="M 110 35 L 115 5 L 90 25 Z" fill="#c97830" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M 110 30 L 110 8 L 92 25 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="1.5"/>
+          <ellipse cx="70" cy="75" rx="42" ry="40" fill="#f7ecdc" stroke="#1a0a08" stroke-width="3"/>
+          <g clip-path="url(#tableHeadClip)">
+            <path d="M 30 45 Q 45 25 65 32 Q 58 50 50 68 Q 35 70 30 45 Z" fill="#2a2018"/>
+            <path d="M 90 35 Q 108 40 108 62 Q 100 75 85 62 Q 82 45 90 35 Z" fill="#c97830"/>
           </g>
           <path d="M 55 98 Q 28 100 28 123 Q 28 146 40 150 L 100 150 Q 112 146 112 123 Q 112 100 85 98 Z" fill="#221a16" stroke="#1a0a08" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M 50 115 L 35 105 L 35 125 L 50 120 Z" fill="#8b2929" stroke="#1a0a08" stroke-width="2"/>
-          <path d="M 90 115 L 105 105 L 105 125 L 90 120 Z" fill="#8b2929" stroke="#1a0a08" stroke-width="2"/>
+          <path d="M 50 115 L 35 105 L 35 125 L 50 120 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
+          <path d="M 90 115 L 105 105 L 105 125 L 90 120 Z" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
           <path d="M 62 98 L 70 109 L 78 98 Z" fill="#fafaf5" stroke="#1a0a08" stroke-width="1.5" stroke-linejoin="round"/>
           <path d="M 60 99 L 52 122" fill="none" stroke="#a83838" stroke-width="5" stroke-linecap="round"/>
           <path d="M 80 99 L 88 122" fill="none" stroke="#a83838" stroke-width="5" stroke-linecap="round"/>
@@ -960,8 +977,8 @@ body {
           <line x1="100" y1="88" x2="120" y2="90" stroke="#fafaf5" stroke-width="1" opacity="0.7"/>
           <ellipse class="cat-cheek" id="cheekL" cx="38" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.6"/>
           <ellipse class="cat-cheek" id="cheekR" cx="102" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.6"/>
-          <ellipse cx="20" cy="140" rx="12" ry="8" fill="#2a1810" stroke="#1a0a08" stroke-width="2"/>
-          <ellipse cx="120" cy="140" rx="12" ry="8" fill="#2a1810" stroke="#1a0a08" stroke-width="2"/>
+          <ellipse cx="20" cy="140" rx="12" ry="8" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
+          <ellipse cx="120" cy="140" rx="12" ry="8" fill="#f7ecdc" stroke="#1a0a08" stroke-width="2"/>
           <rect x="30" y="148" width="80" height="10" rx="3" fill="#4a3020" stroke="#1a0a08" stroke-width="2"/>
           <rect x="35" y="150" width="70" height="2" fill="#d4a017" opacity="0.6"/>
         </svg>
