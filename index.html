@@ -356,10 +356,13 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  /* Extra right padding reserves room for the fixed round sound button so it never
-     overlaps the room/topic column — kept on the bar itself, not on .topbar-info,
-     so both wings stay equal width and .brand stays truly centered between them. */
-  padding: 14px 74px 14px 22px;
+  /* Symmetric padding (not just extra on the right) — a lopsided reserve moves the
+     bar's own visual center, which is what a viewer actually judges NUMBERJACK against,
+     even though the two flex wings stay equal width to each other either way. Padding
+     the right side alone to dodge the fixed sound button just relocates the problem
+     from "wings unequal" to "bar off-center"; matching it on the left keeps the whole
+     bar's center point unmoved while still reserving the same clearance on the right. */
+  padding: 14px 74px;
   background: linear-gradient(180deg, var(--red), var(--red-deep));
   border-bottom: 4px solid var(--ink);
   color: var(--ink);
