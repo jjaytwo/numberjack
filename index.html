@@ -642,6 +642,10 @@ body {
   overflow-y: auto;
 }
 .modal-bg[hidden] { display: none; }
+/* The about modal can be opened from the cover screen (z-index 200), which would
+   otherwise render this modal (z-index 100) invisibly behind it — it only became
+   visible once the curtain closed and hid the cover screen. */
+#aboutModal { z-index: 250; }
 .modal {
   background: linear-gradient(180deg, oklch(20% 0.02 155), oklch(12% 0.02 155));
   border: 3px solid var(--gold);
