@@ -702,6 +702,47 @@ body {
 .modal-feedback.wrong { color: var(--red-bright); }
 .modal-feedback.timeout { color: var(--yellow); }
 .modal-hint { font-family: var(--font-hand); font-style: italic; font-size: 14px; color: var(--ink-soft); margin-top: 4px; }
+
+.about-btn {
+  margin-top: 14px;
+  width: auto;
+  padding: 14px 28px;
+  font-size: 14px;
+  background: linear-gradient(180deg, var(--paper), var(--paper-deep));
+  border: 2px solid var(--gold);
+  color: var(--gold);
+}
+.about-btn:hover { background: linear-gradient(180deg, var(--gold), var(--yellow-deep)); color: var(--paper-deep); }
+.about-modal { position: relative; max-width: 560px; max-height: 85vh; overflow-y: auto; text-align: left; }
+.about-close-btn {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-soft);
+  background: oklch(0% 0 0 / 20%);
+  color: var(--ink);
+  font-size: 15px;
+  cursor: pointer;
+}
+.about-close-btn:hover { border-color: var(--gold); color: var(--gold); }
+.about-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 14px;
+}
+.about-body { font-family: var(--font-body); color: var(--ink); line-height: 1.6; }
+.about-body h3 { font-family: var(--font-display); font-size: 15px; letter-spacing: 0.04em; color: var(--gold); margin: 18px 0 6px; }
+.about-body h3:first-of-type { margin-top: 4px; }
+.about-body p { margin: 6px 0; font-size: 15px; }
+.about-intro { font-style: italic; color: var(--ink-soft); border-left: 3px solid var(--gold); padding-left: 12px; }
+.about-body ul { margin: 6px 0; padding-left: 20px; }
+.about-body li { margin: 6px 0; font-size: 15px; }
+.about-body b { color: var(--gold); }
 .modal-row { display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: 780px; }
 .scratch-toggle-btn {
   margin-top: 14px;
@@ -864,7 +905,43 @@ body {
       <span class="cover-speech-name">Mister Whisker</span>
       <span class="cover-speech-text">Welcome to Mathino</span>
     </div>
+    <button class="btn-pri about-btn" id="aboutBtn" type="button">📖 ABOUT NUMBERJACK</button>
     <button class="btn-pri cover-enter-btn" id="coverEnterBtn" type="button">ENTER THE MATHINO →</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="aboutModal" hidden>
+  <div class="modal about-modal">
+    <button class="about-close-btn" id="aboutCloseBtn" type="button" aria-label="Close">✕</button>
+    <div class="about-title">About Numberjack</div>
+    <div class="about-body">
+      <p class="about-intro">Numberjack เป็นแบล็คแจ็คที่ผสมโจทย์เลขเข้าไป — แต่กติกาการเอาชนะเจ้ามือยังเหมือนแบล็คแจ็คจริงทุกอย่าง รู้หลักพวกนี้ไว้ก่อนลงโต๊ะ ช่วยให้ชนะได้บ่อยขึ้นแน่นอน</p>
+
+      <h3>🎯 เป้าหมายของเกม</h3>
+      <p>ทำแต้มรวมในมือให้ <b>ใกล้ 21 มากที่สุดโดยไม่เกิน</b> และแต้มต้องมากกว่าเจ้ามือ (Mister Whisker) ถ้าเกิน 21 เมื่อไหร่คือ <b>Bust</b> แพ้ทันทีไม่ต้องรอเทียบไพ่</p>
+
+      <h3>🃏 ได้ Blackjack เท่ากับกำไรพิเศษ</h3>
+      <p>ถ้าไพ่ 2 ใบแรกรวมกันได้ 21 พอดี (Blackjack) เกมจ่ายกำไรให้ <b>1.5 เท่า</b> ของเงินเดิมพัน (แทง 100 ได้กำไร 150) มากกว่าการชนะแบบธรรมดาที่ได้แค่ 1 เท่า</p>
+
+      <h3>🎲 ก่อนกด Hit ให้เช็คความเสี่ยงก่อน</h3>
+      <p>ยิ่งแต้มในมือสูง ยิ่งมีไพ่ที่เหลือในสำรับ "เกิน" มากขึ้นตามไปด้วย พูดง่ายๆ คือ <b>มือ 12 ขึ้นไป การจั่วเพิ่มเริ่มเสี่ยง Bust</b> แล้ว ยิ่งมือ 17-20 การจั่วอีกใบยิ่งอันตรายมาก ให้คิดสองรอบก่อนกด Hit ตอนแต้มสูงๆ</p>
+
+      <h3>📊 กลยุทธ์พื้นฐาน (Basic Strategy) แบบสรุป</h3>
+      <p>นักคณิตศาสตร์คำนวณไว้แล้วว่าทางเลือกไหน "คุ้ม" ที่สุดในระยะยาว สรุปสั้นๆ ที่จำง่าย:</p>
+      <ul>
+        <li>มือ <b>8 หรือต่ำกว่า</b> — Hit ได้เสมอ ยังไงก็ไม่ Bust</li>
+        <li>มือ <b>17 ขึ้นไป</b> — Stand ไว้ก่อน จั่วต่อเสี่ยงเกินคุ้ม</li>
+        <li>มือ <b>10 หรือ 11</b> — ถ้ามีทุนพอ ลอง Double ดู เพราะมีโอกาสสูงที่จั่วใบเดียวจะได้แต้มดี</li>
+        <li>มือ <b>12-16 (มือกลางๆ)</b> — จุดที่ต้องคิดเยอะสุด ให้ดูไพ่เปิดของเจ้ามือประกอบการตัดสินใจ</li>
+      </ul>
+
+      <h3>💰 บริหารเงินเดิมพันให้อยู่ได้ยาวๆ</h3>
+      <p>อย่าทุ่มดาวทั้งหมดในตาเดียว เดิมพันเป็นสัดส่วนเล็กๆ ที่สม่ำเสมอในแต่ละรอบ ต่อให้แพ้บ้างก็ยังมีทุนเล่นต่อ และมีโอกาสฟื้นกลับมาได้เสมอ</p>
+
+      <h3>🧮 อย่าลืม!</h3>
+      <p>การ์ดตัวเลข (2-10) ทุกใบต้องตอบโจทย์เลขให้ถูกก่อนถึงจะพลิกไพ่ได้ — ตอบผิดเกิน 3 ครั้งฟรีจะเริ่มโดนหักดาว ฉะนั้นคำนวณให้ชัวร์ก่อนกด Check ก็เป็นส่วนหนึ่งของการ "เล่นให้ชนะ" เหมือนกันนะ</p>
+    </div>
+    <button class="btn-pri" id="aboutGotItBtn" type="button">เข้าใจแล้ว ไปเล่นกันเลย →</button>
   </div>
 </div>
 

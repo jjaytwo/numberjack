@@ -226,6 +226,10 @@ const coverStage = $('coverStage');
 const coverEnterBtn = $('coverEnterBtn');
 const curtainL = $('curtainL');
 const curtainR = $('curtainR');
+const aboutBtn = $('aboutBtn');
+const aboutModal = $('aboutModal');
+const aboutCloseBtn = $('aboutCloseBtn');
+const aboutGotItBtn = $('aboutGotItBtn');
 
 if (coverScreen) coverScreen.hidden = false;
 if (lobby) lobby.hidden = true;
@@ -247,6 +251,25 @@ if (coverEnterBtn) {
     }, 850);
   };
 }
+
+// ============== About Numberjack (strategy guide, reachable from the cover screen) ==============
+function closeAbout() { if (aboutModal) aboutModal.hidden = true; }
+if (aboutBtn) {
+  aboutBtn.onclick = () => {
+    audio.init();
+    audio.resume();
+    audio.click();
+    if (aboutModal) aboutModal.hidden = false;
+  };
+}
+if (aboutCloseBtn) aboutCloseBtn.onclick = () => { audio.click(); closeAbout(); };
+if (aboutGotItBtn) aboutGotItBtn.onclick = () => { audio.click(); closeAbout(); };
+if (aboutModal) {
+  aboutModal.onclick = e => { if (e.target === aboutModal) closeAbout(); };
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && aboutModal && !aboutModal.hidden) closeAbout();
+});
 
 // ============== Tabs ==============
 tabCreate.onclick = () => {
