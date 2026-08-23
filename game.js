@@ -230,6 +230,9 @@ const aboutBtn = $('aboutBtn');
 const aboutModal = $('aboutModal');
 const aboutCloseBtn = $('aboutCloseBtn');
 const aboutGotItBtn = $('aboutGotItBtn');
+const theoryBtn = $('theoryBtn');
+const theoryModal = $('theoryModal');
+const theoryCloseBtn = $('theoryCloseBtn');
 
 if (coverScreen) coverScreen.hidden = false;
 if (lobby) lobby.hidden = true;
@@ -267,8 +270,27 @@ if (aboutGotItBtn) aboutGotItBtn.onclick = () => { audio.click(); closeAbout(); 
 if (aboutModal) {
   aboutModal.onclick = e => { if (e.target === aboutModal) closeAbout(); };
 }
+
+// ============== Deep theory page (nested dialog opened from the teacher cat's "Click") ==============
+function closeTheory() { if (theoryModal) theoryModal.hidden = true; }
+if (theoryBtn) {
+  theoryBtn.onclick = () => {
+    audio.init();
+    audio.resume();
+    audio.click();
+    if (theoryModal) theoryModal.hidden = false;
+  };
+}
+if (theoryCloseBtn) theoryCloseBtn.onclick = () => { audio.click(); closeTheory(); };
+if (theoryModal) {
+  theoryModal.onclick = e => { if (e.target === theoryModal) closeTheory(); };
+}
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && aboutModal && !aboutModal.hidden) closeAbout();
+  if (e.key !== 'Escape') return;
+  // Theory is the nested (topmost) dialog — close it first if open, leaving the
+  // about modal underneath still open, same as any layered-dialog Escape behavior.
+  if (theoryModal && !theoryModal.hidden) closeTheory();
+  else if (aboutModal && !aboutModal.hidden) closeAbout();
 });
 
 // ============== Tabs ==============

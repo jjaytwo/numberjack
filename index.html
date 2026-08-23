@@ -667,6 +667,9 @@ body {
    otherwise render this modal (z-index 100) invisibly behind it — it only became
    visible once the curtain closed and hid the cover screen. */
 #aboutModal { z-index: 250; }
+/* Theory modal opens as a nested dialog on top of the about modal, so it needs a
+   higher stacking layer than #aboutModal's 250, same reasoning as above. */
+#theoryModal { z-index: 300; }
 .modal {
   background: linear-gradient(180deg, oklch(20% 0.02 155), oklch(12% 0.02 155));
   border: 3px solid var(--gold);
@@ -772,6 +775,26 @@ body {
 .about-body ul { margin: 8px 0; padding-left: 22px; }
 .about-body li { margin: 9px 0; font-size: 16px; }
 .about-body b { color: var(--gold); }
+.theory-modal { position: relative; max-width: 640px; max-height: 85vh; overflow-y: auto; text-align: left; }
+.formula {
+  margin: 10px 0 16px;
+  padding: 14px 18px;
+  background: var(--paper-deep);
+  border: 1.5px solid var(--gold);
+  border-radius: 10px;
+  font-family: var(--font-numeral);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+.formula sub, .formula sup { font-size: 0.65em; }
+.theory-table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 15px; }
+.theory-table td { padding: 8px 10px; border-bottom: 1px solid oklch(85% 0.05 80 / 15%); }
+.theory-table td:first-child { white-space: nowrap; color: var(--gold); font-family: var(--font-numeral); font-weight: 700; }
+.theory-table tr:last-child td { border-bottom: none; }
 /* Professor cat: big, calico, spectacled, peeking around slowly beside the card.
    The drift animation lives on the group so the speech bubble travels with the
    cat instead of sitting still while the cat wanders off underneath it. */
@@ -802,6 +825,28 @@ body {
   border-style: solid;
   border-color: var(--yellow-deep) transparent transparent transparent;
 }
+.theory-click-btn {
+  display: block;
+  margin: 10px auto 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--gold);
+  background: var(--gold);
+  color: var(--paper-deep);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  animation: theory-btn-pulse 1.6s ease-in-out infinite;
+}
+.theory-click-btn:hover { background: var(--yellow-deep); }
+@keyframes theory-btn-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(85% 0.15 85 / 55%); }
+  50% { box-shadow: 0 0 0 6px oklch(85% 0.15 85 / 0%); }
+}
+@media (prefers-reduced-motion: reduce) { .theory-click-btn { animation: none; } }
 @keyframes teacher-drift {
   0%   { transform: translate(0, 0) rotate(0deg); }
   20%  { transform: translate(-10px, -12px) rotate(-4deg); }
@@ -987,7 +1032,10 @@ body {
 
 <div class="modal-bg" id="aboutModal" hidden>
   <div class="about-teacher-group">
-    <div class="about-teacher-speech">รู้หรือไม่ เกม Blackjack นั้นมีหลักการทางคณิตศาสตร์อยู่มากมาย ถ้าอยากรู้ล่ะก็ลองอ่านนี่ดูสิ</div>
+    <div class="about-teacher-speech">
+      รู้หรือไม่ เกม Blackjack นั้นมีหลักการทางคณิตศาสตร์อยู่มากมาย ถ้าอยากรู้ล่ะก็ลองอ่านนี่ดูสิ
+      <button class="theory-click-btn" id="theoryBtn" type="button">👉 Click</button>
+    </div>
     <div class="about-teacher-cat" aria-hidden="true">
       <svg viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -1070,6 +1118,45 @@ body {
       <p>การ์ดตัวเลข (2-10) ทุกใบต้องตอบโจทย์เลขให้ถูกก่อนถึงจะพลิกไพ่ได้ — ตอบผิดเกิน 3 ครั้งฟรีจะเริ่มโดนหักดาว ฉะนั้นคำนวณให้ชัวร์ก่อนกด Check ก็เป็นส่วนหนึ่งของการ "เล่นให้ชนะ" เหมือนกันนะ</p>
     </div>
     <button class="btn-pri" id="aboutGotItBtn" type="button">เข้าใจแล้ว ไปเล่นกันเลย →</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="theoryModal" hidden>
+  <div class="modal theory-modal">
+    <button class="about-close-btn" id="theoryCloseBtn" type="button" aria-label="Close">✕</button>
+    <div class="about-title">The Math Behind Numberjack</div>
+    <div class="about-body theory-body">
+      <p class="about-intro">เนื้อหาชุดนี้คือหลักการทางคณิตศาสตร์ที่ใช้จริงในการสร้างระบบของเกม — ถ้าอยากรู้ลึกว่าทำไมโปรแกรมถึงคำนวณแบบนี้ อ่านต่อได้เลย</p>
+
+      <h3>1.1 ทฤษฎีความน่าจะเป็นและการสุ่ม</h3>
+      <p><b>การจัดหมู่ (Combination)</b> ใช้คำนวณขนาดของปริภูมิตัวอย่างในการแจกไพ่ 2 ใบแรกจากสำรับ 52 ใบ:</p>
+      <div class="formula">C<sub>n,r</sub> = n! / [(n&minus;r)! &times; r!]<br>n(S) = C<sub>52,2</sub> = 1,326</div>
+      <p><b>โอกาสได้ Natural Blackjack</b> จากไพ่ 2 ใบแรก:</p>
+      <div class="formula">P(Blackjack) = 64 / 1,326 &approx; 0.0483<br>จ่ายอัตราตอบแทน 3&nbsp;:&nbsp;2</div>
+      <p><b>ฟังก์ชันความน่าจะเป็นแต้มเกิน (Real-time)</b> คำนวณทุกครั้งก่อนกด Hit จากไพ่ที่เหลือในสำรับ D<sub>remain</sub>:</p>
+      <div class="formula">P(E<sub>Bust</sub>(k)) = จำนวนไพ่ใน D<sub>remain</sub> ที่มีแต้ม &gt; (21&minus;k) &divide; n(D<sub>remain</sub>)</div>
+
+      <h3>1.2 แบบจำลองกระบวนการตัดสินใจมาร์คอฟ (MDP)</h3>
+      <p><b>คุณสมบัติมาร์คอฟ</b>: ความน่าจะเป็นของสถานะถัดไป ขึ้นอยู่กับสถานะปัจจุบันและการกระทำเท่านั้น ไม่ต้องอิงประวัติรอบก่อนหน้า:</p>
+      <div class="formula">S<sub>t</sub> = (แต้มรวมผู้เล่น, ไพ่เปิดของเจ้ามือ) &rarr; S<sub>t+1</sub></div>
+      <p><b>ฟังก์ชันผลตอบแทน (Reward Function) R</b> กำหนดการได้-เสียชิปต่อรอบ เป็นสัดส่วนของเงินเดิมพัน:</p>
+      <table class="theory-table">
+        <tr><td><b>R = +1.0</b></td><td>ผู้เล่นชนะ (แต้มมากกว่าเจ้ามือ)</td></tr>
+        <tr><td><b>R = +1.5</b></td><td>Blackjack ตั้งแต่ 2 ใบแรก (จ่าย 3:2)</td></tr>
+        <tr><td><b>R = 0.0</b></td><td>เสมอ (Push) — ได้เงินเดิมพันคืน</td></tr>
+        <tr><td><b>R = &minus;1.0</b></td><td>แพ้ หรือ Bust — เสียเงินเดิมพันทั้งหมด</td></tr>
+      </table>
+
+      <h3>1.3 ค่าคาดหมายและกลยุทธ์พื้นฐาน</h3>
+      <p>ระบบคำนวณค่าคาดหวังของทุกทางเลือก แล้วเลือกทางที่ให้ผลตอบแทนเฉลี่ยสูงสุดในระยะยาว:</p>
+      <div class="formula">max<sub>a</sub> E(X | s, a)</div>
+      <p>นำไปใช้ 2 ส่วนหลัก: (1) เป็นฐานข้อมูลคำนวณเบื้องหลังของระบบ (2) เป็นระบบปัญญาประดิษฐ์แนะนำการตัดสินใจให้ผู้เล่นแบบเรียลไทม์</p>
+
+      <h3>1.4 เกณฑ์ของเคลลี (Kelly Criterion)</h3>
+      <p>ใช้หาสัดส่วนเงินเดิมพันที่เหมาะสมที่สุดต่อรอบ เพื่อบริหารความเสี่ยงของเงินทุนอย่างมีหลักการ:</p>
+      <div class="formula">f* = (bp &minus; q) / b</div>
+      <p>โดย <b>b</b> = อัตราต่อรองของการพนัน, <b>p</b> = ความน่าจะเป็นที่จะชนะ, <b>q</b> = 1&minus;p คือความน่าจะเป็นที่จะแพ้</p>
+    </div>
   </div>
 </div>
 
