@@ -334,25 +334,58 @@ body {
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
-  padding: 14px 22px;
+  /* Extra right padding reserves room for the fixed round sound button so it never
+     overlaps the room/topic column — kept on the bar itself, not on .topbar-info,
+     so both wings stay equal width and .brand stays truly centered between them. */
+  padding: 14px 74px 14px 22px;
   background: linear-gradient(180deg, var(--red), var(--red-deep));
   border-bottom: 4px solid var(--ink);
   color: var(--ink);
   gap: 8px 16px;
 }
-.topbar-info { text-align: right; padding-right: 52px; }
+/* Equal flex-basis on both wings keeps .brand visually centered no matter
+   how much (or little) text sits in the stars vs. room/topic column. */
+.topbar-left { flex: 1 1 0; min-width: 0; }
+.topbar-info { flex: 1 1 0; min-width: 0; text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
 .stat-l { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: oklch(85% 0.05 80 / 80%); display: block; }
 .stat-v { font-family: var(--font-numeral); font-size: 32px; font-weight: 700; color: var(--ink); }
 .brand {
+  flex: 0 0 auto;
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gold);
+  text-align: center;
 }
+.room-chip { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.room-chip-row { display: flex; align-items: center; gap: 8px; }
+.room-chip-code {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 2px 0 oklch(0% 0 0 / 30%);
+}
+.copy-btn {
+  flex: none;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--yellow-deep);
+  background: oklch(0% 0 0 / 20%);
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+.copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+.copy-btn.copied { border-color: var(--green-bright); color: var(--green-bright); }
 .link-btn { background: none; border: none; color: var(--ink-soft); font-family: var(--font-body); font-style: italic; font-size: 13px; cursor: pointer; padding: 0; text-decoration: underline; }
 .felt {
   position: relative;
@@ -676,7 +709,9 @@ body {
   .btn { padding: 11px 18px; font-size: 14px; }
   .speech-text { font-size: 20px; }
   .topbar { padding: 10px 14px; justify-content: center; }
-  .topbar-info { text-align: center; padding-right: 0; }
+  .topbar-left, .topbar-info { flex: 1 1 100%; }
+  .topbar-info { text-align: center; align-items: center; padding-right: 0; }
+  .room-chip, .room-chip-row { align-items: center; }
   .brand { font-size: 17px; }
   .stat-v { font-size: 24px; }
   .felt { min-height: 320px; padding: 20px 14px 14px; gap: 12px; }
@@ -797,15 +832,21 @@ body {
 
 <div class="table-room" id="tableRoom" hidden>
   <div class="topbar">
-    <div>
+    <div class="topbar-left">
       <span class="stat-l">Your stars</span>
       <span class="stat-v" id="balance">—</span>
     </div>
     <div class="brand">NUMBERJACK</div>
     <div class="topbar-info">
-      <span class="stat-l" id="roomLabel">Room: —</span><br>
-      <span class="stat-l" id="topicLabel">Topic: —</span><br>
-      <span class="stat-l mp-status-inline" id="mpStatusTable" hidden></span><br>
+      <div class="room-chip">
+        <span class="stat-l">Room</span>
+        <div class="room-chip-row">
+          <span class="room-chip-code" id="roomLabel">—</span>
+          <button class="copy-btn" id="copyRoomBtn" type="button" title="Copy room code" aria-label="Copy room code">📋</button>
+        </div>
+      </div>
+      <span class="stat-l" id="topicLabel">Topic: —</span>
+      <span class="stat-l mp-status-inline" id="mpStatusTable" hidden></span>
       <button class="link-btn" id="leaveBtn" type="button">leave</button>
     </div>
   </div>

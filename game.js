@@ -167,6 +167,7 @@ const dealerTotal = $('dealerTotal');
 const seatsEl = $('seats');
 const balanceEl = $('balance');
 const roomLabel = $('roomLabel');
+const copyRoomBtn = $('copyRoomBtn');
 const topicLabel = $('topicLabel');
 const topicSelect = $('topicSelect');
 const statusEl = $('status');
@@ -316,7 +317,7 @@ function render() {
   if (G.me < 0) return;
   const seat = G.seats[G.me];
   balanceEl.textContent = seat ? '★' + seat.balance : '—';
-  roomLabel.textContent = 'Room: ' + (G.code || '—') + (G.phase !== 'betting' ? ' 🔒' : '');
+  roomLabel.textContent = (G.code || '—') + (G.phase !== 'betting' ? ' 🔒' : '');
   if (topicLabel) topicLabel.textContent = 'Topic: ' + (TOPIC_LABELS[G.topic] || '—');
   speech.textContent = G.msg;
   messageRail.textContent = G.msg;
@@ -1115,6 +1116,38 @@ clearBetBtn.onclick = () => {
   if (G.isHost) { broadcast(); render(); }
   else if (G.hostConn) G.hostConn.send({type:'clearBet'});
 };
+
+if (copyRoomBtn) {
+  let copyResetHandle = null;
+  copyRoomBtn.onclick = () => {
+    if (!G.code) return;
+    audio.click();
+    const done = ok => {
+      if (copyResetHandle) clearTimeout(copyResetHandle);
+      copyRoomBtn.textContent = ok ? '✓' : '✕';
+      copyRoomBtn.classList.toggle('copied', ok);
+      copyResetHandle = setTimeout(() => {
+        copyRoomBtn.textContent = '📋';
+        copyRoomBtn.classList.remove('copied');
+      }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(G.code).then(() => done(true), () => done(false));
+    } else {
+      // Fallback for browsers/contexts without the async Clipboard API.
+      const ta = document.createElement('textarea');
+      ta.value = G.code;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch(_) {}
+      document.body.removeChild(ta);
+      done(ok);
+    }
+  };
+}
 
 leaveBtn.onclick = () => {
   if (G.isHost) {
