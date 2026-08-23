@@ -434,7 +434,17 @@ function renderSeats() {
   });
 }
 
-setInterval(() => { if (G.turnDeadline && G.me >= 0) render(); }, 1000);
+// Only patch the countdown text in place — calling render() here would tear down and
+// rebuild every seat/card each second, replaying the "deal" fly-in animation on
+// everything at the table and making the whole board look like it's bouncing.
+setInterval(() => {
+  if (!G.turnDeadline || G.me < 0) return;
+  const timerEl = seatsEl.querySelector('.seat.turn .seat-timer');
+  if (!timerEl) return;
+  const secs = Math.max(0, Math.ceil((G.turnDeadline - Date.now()) / 1000));
+  timerEl.textContent = '⏱ ' + secs + 's';
+  timerEl.classList.toggle('low', secs <= 10);
+}, 1000);
 
 function renderControls() {
   const seat = G.seats[G.me];
