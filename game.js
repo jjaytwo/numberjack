@@ -485,12 +485,23 @@ const MP_STATUS_TEXT = {
   connected: '🟢 Multiplayer connected — friends can join',
   failed: '🔴 Multiplayer unavailable — solo mode only (reload to retry)',
 };
+// Short form for the topbar pill, which sits in a tight column next to the brand —
+// the full sentence above wraps to two lines there and crowds the NUMBERJACK title.
+const MP_STATUS_TEXT_SHORT = {
+  connecting: '🟡 Connecting…',
+  connected: '🟢 Multiplayer on',
+  failed: '🔴 Solo mode only',
+};
 let mpConnectTimeout = null;
 function setMpStatus(state) {
   G.mpConnState = state;
-  const text = MP_STATUS_TEXT[state] || '';
-  if (mpStatus) { mpStatus.textContent = text; mpStatus.className = 'mp-status ' + state; }
-  if (mpStatusTable) { mpStatusTable.textContent = text; mpStatusTable.className = 'stat-l mp-status-inline ' + state; mpStatusTable.hidden = false; }
+  if (mpStatus) { mpStatus.textContent = MP_STATUS_TEXT[state] || ''; mpStatus.className = 'mp-status ' + state; }
+  if (mpStatusTable) {
+    mpStatusTable.textContent = MP_STATUS_TEXT_SHORT[state] || '';
+    mpStatusTable.title = MP_STATUS_TEXT[state] || '';
+    mpStatusTable.className = 'stat-l mp-status-inline ' + state;
+    mpStatusTable.hidden = false;
+  }
   if (state !== 'connecting' && mpConnectTimeout) { clearTimeout(mpConnectTimeout); mpConnectTimeout = null; }
 }
 
