@@ -809,13 +809,15 @@ body {
 /* Professor cat: big, calico, spectacled, peeking around slowly beside the card.
    The drift animation lives on the group so the speech bubble travels with the
    cat instead of sitting still while the cat wanders off underneath it. */
-/* Drift lives on the cat visual only, not the group — the speech bubble (and its
-   Click button) needs to stay put so taps land reliably. Putting a continuous
-   translate/rotate on an ancestor of a tappable button makes it a moving target on
-   touchscreens: by the time a finger registers, the button has drifted away from
-   where it was tapped. */
-.about-teacher-group { flex: none; display: flex; flex-direction: column; align-items: center; }
-.about-teacher-cat { width: 190px; height: 217px; filter: drop-shadow(0 8px 12px oklch(0% 0 0 / 45%)); animation: teacher-drift 9s ease-in-out infinite; }
+/* .about-teacher-col is the non-animated outer box (flex item next to the card);
+   .about-teacher-group (bubble + cat together) carries the drift so the message
+   visually travels with the cat. The Click button lives outside the group, as its
+   own sibling, so it stays put — a continuously moving ancestor turns a tappable
+   button into a moving target on touchscreens, and a finger landing where the
+   button *was* misses it once it's drifted. */
+.about-teacher-col { flex: none; display: flex; flex-direction: column; align-items: center; }
+.about-teacher-group { display: flex; flex-direction: column; align-items: center; animation: teacher-drift 9s ease-in-out infinite; }
+.about-teacher-cat { width: 190px; height: 217px; filter: drop-shadow(0 8px 12px oklch(0% 0 0 / 45%)); }
 .about-teacher-cat svg { width: 100%; height: 100%; display: block; }
 .about-teacher-speech {
   position: relative;
@@ -843,7 +845,7 @@ body {
 }
 .theory-click-btn {
   display: block;
-  margin: 10px auto 0;
+  margin: 14px 0 0;
   padding: 6px 16px;
   border-radius: 999px;
   border: 1.5px solid var(--gold);
@@ -871,10 +873,10 @@ body {
   80%  { transform: translate(-8px, 10px) rotate(-3deg); }
   100% { transform: translate(0, 0) rotate(0deg); }
 }
-@media (prefers-reduced-motion: reduce) { .about-teacher-cat { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .about-teacher-group { animation: none; } }
 @media (max-width: 860px) {
   #aboutModal { flex-direction: column; gap: 8px; }
-  .about-teacher-group { margin-top: 20px; }
+  .about-teacher-col { margin-top: 20px; }
   .about-teacher-cat { width: 120px; height: 137px; }
   .about-teacher-speech { font-size: 13px; padding: 10px 14px; max-width: 170px; }
 }
@@ -1066,12 +1068,12 @@ body {
 </div>
 
 <div class="modal-bg" id="aboutModal" hidden>
-  <div class="about-teacher-group">
-    <div class="about-teacher-speech">
-      รู้หรือไม่ เกม Blackjack นั้นมีหลักการทางคณิตศาสตร์อยู่มากมาย ถ้าอยากรู้ล่ะก็ลองอ่านนี่ดูสิ
-      <button class="theory-click-btn" id="theoryBtn" type="button">👉 Click</button>
-    </div>
-    <div class="about-teacher-cat" aria-hidden="true">
+  <div class="about-teacher-col">
+    <div class="about-teacher-group">
+      <div class="about-teacher-speech">
+        รู้หรือไม่ เกม Blackjack นั้นมีหลักการทางคณิตศาสตร์อยู่มากมาย ถ้าอยากรู้ล่ะก็ลองอ่านนี่ดูสิ
+      </div>
+      <div class="about-teacher-cat" aria-hidden="true">
       <svg viewBox="0 0 140 160" xmlns="http://www.w3.org/2000/svg">
         <defs>
         <clipPath id="teacherHeadClip"><ellipse cx="70" cy="75" rx="42" ry="40"/></clipPath>
@@ -1120,7 +1122,9 @@ body {
       <ellipse cx="38" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.5"/>
       <ellipse cx="102" cy="92" rx="6" ry="4" fill="#d87090" opacity="0.5"/>
       </svg>
+      </div>
     </div>
+    <button class="theory-click-btn" id="theoryBtn" type="button">👉 Click</button>
   </div>
   <div class="modal about-modal">
     <button class="about-close-btn" id="aboutCloseBtn" type="button" aria-label="Close">✕</button>
